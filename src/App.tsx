@@ -3,11 +3,12 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useRef,
   useState,
 } from "react";
 
 export const App: React.FC = () => {
-  const drawCanvasRef = React.useRef<{
+  const drawCanvasRef = useRef<{
     clear: () => void;
     download: () => void;
   } | null>(null);
@@ -34,8 +35,8 @@ export const App: React.FC = () => {
 
 const DrawCanvas = forwardRef(
   (props: { width: number; height: number }, ref) => {
-    const canvasRef = React.useRef<HTMLCanvasElement>(null);
-    const contextRef = React.useRef<CanvasRenderingContext2D | null>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const contextRef = useRef<CanvasRenderingContext2D | null>(null);
     const [isDrawing, setIsDrawing] = useState(false);
 
     /**
