@@ -58,7 +58,9 @@ const DrawCanvas = forwardRef(
     /**
      * 描画開始
      */
-    const handleStart = useCallback(() => {
+    const handleStart = useCallback((e: MouseEvent | TouchEvent) => {
+      e.preventDefault();
+
       const ctx = contextRef.current!;
 
       ctx.beginPath();
@@ -70,6 +72,8 @@ const DrawCanvas = forwardRef(
      */
     const handleMove = useCallback(
       (e: MouseEvent | TouchEvent) => {
+        e.preventDefault();
+
         if (!isDrawing) {
           return;
         }
@@ -109,7 +113,9 @@ const DrawCanvas = forwardRef(
     /**
      * 描画終了
      */
-    const handleEnd = useCallback(() => {
+    const handleEnd = useCallback((e: MouseEvent | TouchEvent) => {
+      e.preventDefault();
+
       const ctx = contextRef.current!;
 
       ctx.closePath();
