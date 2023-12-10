@@ -1,7 +1,16 @@
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 
 export const App: React.FC = () => {
-  const drawCanvasRef = React.useRef<{ clear: () => void; download: () => void } | null>(null);
+  const drawCanvasRef = React.useRef<{
+    clear: () => void;
+    download: () => void;
+  } | null>(null);
 
   const handleClear = useCallback(() => {
     drawCanvasRef.current?.clear();
@@ -15,7 +24,7 @@ export const App: React.FC = () => {
     <>
       <h1>react-canvas-draw</h1>
       <div>
-        <DrawCanvas ref={drawCanvasRef} />
+        <DrawCanvas ref={drawCanvasRef} width={800} height={400} />
       </div>
       <button onClick={handleClear}>Clear</button>
       <button onClick={handleDownload}>Download</button>
@@ -23,137 +32,144 @@ export const App: React.FC = () => {
   );
 };
 
-const DrawCanvas = forwardRef((_, ref) => {
-  const canvasRef = React.useRef<HTMLCanvasElement>(null);
-  const contextRef = React.useRef<CanvasRenderingContext2D | null>(null);
-  const [isDrawing, setIsDrawing] = useState(false);
+const DrawCanvas = forwardRef(
+  (props: { width: number; height: number }, ref) => {
+    const canvasRef = React.useRef<HTMLCanvasElement>(null);
+    const contextRef = React.useRef<CanvasRenderingContext2D | null>(null);
+    const [isDrawing, setIsDrawing] = useState(false);
 
-  /**
-   * 初期化
-   */
-  const init = useCallback(() => {
-    const canvas = canvasRef.current!;
-    canvas.width = 800;
-    canvas.height = 400;
-
-    const ctx = canvas.getContext("2d")!;
-    ctx.fillStyle = "lightgray";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    contextRef.current = ctx;
-  }, []);
-  useEffect(init, [init]);
-
-  /**
-   * 描画開始
-   */
-  const handleStart = useCallback(() => {
-    const ctx = contextRef.current!;
-
-    ctx.beginPath();
-    setIsDrawing(true);
-  }, []);
-
-  /**
-   * 描画中
-   */
-  const handleMove = useCallback(
-    (e: MouseEvent | TouchEvent) => {
-      if (!isDrawing) {
-        return;
-      }
-
+    /**
+     * 初期化
+     */
+    const init = useCallback(() => {
       const canvas = canvasRef.current!;
+      canvas.width = props.width;
+      canvas.height = props.height;
+
+      const ctx = canvas.getContext("2d")!;
+      ctx.fillStyle = "lightgray";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      contextRef.current = ctx;
+    }, [props.width, props.height]);
+    useEffect(init, [init]);
+
+    /**
+     * 描画開始
+     */
+    const handleStart = useCallback(() => {
       const ctx = contextRef.current!;
 
-      const { x, y } = (() => {
-        const rect = canvas.getBoundingClientRect();
+      ctx.beginPath();
+      setIsDrawing(true);
+    }, []);
 
-        if (e instanceof MouseEvent) {
-          return {
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top,
-          };
+    /**
+     * 描画中
+     */
+    const handleMove = useCallback(
+      (e: MouseEvent | TouchEvent) => {
+        if (!isDrawing) {
+          return;
         }
 
-        if (e instanceof TouchEvent) {
-          return {
-            x: e.changedTouches[0].clientX - rect.left,
-            y: e.changedTouches[0].clientY - rect.top,
-          };
-        }
+        const canvas = canvasRef.current!;
+        const ctx = contextRef.current!;
 
-        throw new Error("invalid event");
-      })();
+        const { x, y } = (() => {
+          const rect = canvas.getBoundingClientRect();
 
-      ctx.lineTo(x, y);
-      ctx.lineCap = "round";
-      ctx.lineWidth = 5;
-      ctx.strokeStyle = "black";
-      ctx.stroke();
-    },
-    [isDrawing],
-  );
+          if (e instanceof MouseEvent) {
+            return {
+              x: e.clientX - rect.left,
+              y: e.clientY - rect.top,
+            };
+          }
 
-  /**
-   * 描画終了
-   */
-  const handleEnd = useCallback(() => {
-    const ctx = contextRef.current!;
+          if (e instanceof TouchEvent) {
+            return {
+              x: e.changedTouches[0].clientX - rect.left,
+              y: e.changedTouches[0].clientY - rect.top,
+            };
+          }
 
-    ctx.closePath();
-    setIsDrawing(false);
-  }, []);
+          throw new Error("invalid event");
+        })();
 
-  /**
-   * 全消し
-   */
-  const handleClear = useCallback(init, [init]);
+        ctx.lineTo(x, y);
+        ctx.lineCap = "round";
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = "black";
+        ctx.stroke();
+      },
+      [isDrawing],
+    );
 
-  /**
-   * ダウンロード
-   */
-  const handleDownload = useCallback(() => {
-    const canvas = canvasRef.current!;
+    /**
+     * 描画終了
+     */
+    const handleEnd = useCallback(() => {
+      const ctx = contextRef.current!;
 
-    const link = document.createElement("a");
-    link.href = canvas.toDataURL("image/jpeg");
-    link.download = "image.jpeg";
-    link.click();
-  }, []);
+      ctx.closePath();
+      setIsDrawing(false);
+    }, []);
 
-  /**
-   * イベント登録
-   */
-  useEffect(() => {
-    const canvas = canvasRef.current!;
+    /**
+     * 全消し
+     */
+    const handleClear = useCallback(init, [init]);
 
-    // for PC
-    canvas.addEventListener("mousedown", handleStart);
-    canvas.addEventListener("mousemove", handleMove);
-    canvas.addEventListener("mouseup", handleEnd);
+    /**
+     * ダウンロード
+     */
+    const handleDownload = useCallback(() => {
+      const canvas = canvasRef.current!;
 
-    // for Smartphone
-    canvas.addEventListener("touchstart", handleStart);
-    canvas.addEventListener("touchmove", handleMove);
-    canvas.addEventListener("touchend", handleEnd);
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/jpeg");
+      link.download = "image.jpeg";
+      link.click();
+    }, []);
 
-    return () => {
-      canvas.removeEventListener("mousedown", handleStart);
-      canvas.removeEventListener("mousemove", handleMove);
-      canvas.removeEventListener("mouseup", handleEnd);
-      canvas.removeEventListener("touchstart", handleStart);
-      canvas.removeEventListener("touchmove", handleMove);
-      canvas.removeEventListener("touchend", handleEnd);
-    };
-  }, [handleStart, handleMove, handleEnd]);
+    /**
+     * イベント登録
+     */
+    useEffect(() => {
+      const canvas = canvasRef.current!;
 
-  useImperativeHandle(ref, () => ({
-    clear: handleClear,
-    download: handleDownload,
-  }));
+      // for PC
+      canvas.addEventListener("mousedown", handleStart);
+      canvas.addEventListener("mousemove", handleMove);
+      canvas.addEventListener("mouseup", handleEnd);
 
-  return (
-    <canvas ref={canvasRef} id="canvas" width="800" height="600"></canvas>
-  );
-});
+      // for Smartphone
+      canvas.addEventListener("touchstart", handleStart);
+      canvas.addEventListener("touchmove", handleMove);
+      canvas.addEventListener("touchend", handleEnd);
+
+      return () => {
+        canvas.removeEventListener("mousedown", handleStart);
+        canvas.removeEventListener("mousemove", handleMove);
+        canvas.removeEventListener("mouseup", handleEnd);
+        canvas.removeEventListener("touchstart", handleStart);
+        canvas.removeEventListener("touchmove", handleMove);
+        canvas.removeEventListener("touchend", handleEnd);
+      };
+    }, [handleStart, handleMove, handleEnd]);
+
+    useImperativeHandle(ref, () => ({
+      clear: handleClear,
+      download: handleDownload,
+    }));
+
+    return (
+      <canvas
+        ref={canvasRef}
+        id="canvas"
+        width={props.width}
+        height={props.height}
+      />
+    );
+  },
+);
