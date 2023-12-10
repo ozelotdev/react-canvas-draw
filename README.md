@@ -2,6 +2,10 @@
 
 This is an application that allows you to write handwritten characters using React and Canvas.
 
+## Demo
+
+https://ozelotdev.github.io/react-canvas-draw/
+
 ## Development
 
 ### Local Development
