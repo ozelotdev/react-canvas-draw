@@ -1,6 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 export const App: React.FC = () => {
+  return (
+    <>
+      <DrawCanvas />
+    </>
+  );
+};
+
+const DrawCanvas: React.FC = () => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const contextRef = React.useRef<CanvasRenderingContext2D | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
