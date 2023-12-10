@@ -1,30 +1,34 @@
-# React + TypeScript + Vite
+# react-canvas-draw
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is an application that allows you to write handwritten characters using React and Canvas.
 
-Currently, two official plugins are available:
+## Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Local Development
 
-## Expanding the ESLint configuration
+Prepare the following environment.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Node.js v20
+- pnpm v8
 
-- Configure the top-level `parserOptions` property like this:
+Execute the following command.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
-    project: ["./tsconfig.json", "./tsconfig.node.json"],
-    tsconfigRootDir: __dirname,
-  },
-};
+```bash
+pnpm run dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Open http://localhost:5173 in your browser.
+
+### Development in DevContainer
+
+Install the VSCode extension [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
+
+Open this repository and execute "Dev Containers: Reopen in Container" from the VSCode command palette.
+
+Execute the following command.
+
+```bash
+pnpm run dev
+```
+
+Open http://localhost:5173 in your browser.
