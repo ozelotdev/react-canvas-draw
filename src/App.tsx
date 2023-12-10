@@ -94,8 +94,8 @@ export const App: React.FC = () => {
     const canvas = canvasRef.current!;
 
     const link = document.createElement("a");
-    link.href = canvas.toDataURL("image/png");
-    link.download = "image.png";
+    link.href = canvas.toDataURL("image/jpeg");
+    link.download = "image.jpeg";
     link.click();
   }, []);
 
