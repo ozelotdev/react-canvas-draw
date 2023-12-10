@@ -37,6 +37,7 @@ const DrawCanvas = forwardRef(
   (props: { width: number; height: number }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const contextRef = useRef<CanvasRenderingContext2D | null>(null);
+    const positionRef = useRef<{ x: number; y: number } | null>(null);
     const [isDrawing, setIsDrawing] = useState(false);
 
     /**
@@ -64,6 +65,7 @@ const DrawCanvas = forwardRef(
       const ctx = contextRef.current!;
 
       ctx.beginPath();
+      positionRef.current = null;
       setIsDrawing(true);
     }, []);
 
@@ -80,6 +82,9 @@ const DrawCanvas = forwardRef(
 
         const canvas = canvasRef.current!;
         const ctx = contextRef.current!;
+        ctx.lineCap = "round";
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = "black";
 
         const { x, y } = (() => {
           const rect = canvas.getBoundingClientRect();
@@ -101,11 +106,14 @@ const DrawCanvas = forwardRef(
           throw new Error("invalid event");
         })();
 
+        ctx.moveTo(
+          positionRef.current?.x ?? x,
+          positionRef.current?.y ?? y,
+        )
         ctx.lineTo(x, y);
-        ctx.lineCap = "round";
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = "black";
         ctx.stroke();
+
+        positionRef.current = { x, y };
       },
       [isDrawing],
     );
@@ -119,6 +127,7 @@ const DrawCanvas = forwardRef(
       const ctx = contextRef.current!;
 
       ctx.closePath();
+      positionRef.current = null;
       setIsDrawing(false);
     }, []);
 
