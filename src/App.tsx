@@ -103,7 +103,7 @@ const DrawCanvas = forwardRef(
 
         ctx.lineTo(x, y);
         ctx.lineCap = "round";
-        ctx.lineWidth = 5;
+        ctx.lineWidth = 3;
         ctx.strokeStyle = "black";
         ctx.stroke();
       },
