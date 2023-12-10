@@ -93,8 +93,8 @@ const DrawCanvas = forwardRef(
 
           if (e instanceof TouchEvent) {
             return {
-              x: e.changedTouches[0].clientX - rect.left,
-              y: e.changedTouches[0].clientY - rect.top,
+              x: e.touches[0].clientX - rect.left,
+              y: e.touches[0].clientY - rect.top,
             };
           }
 
