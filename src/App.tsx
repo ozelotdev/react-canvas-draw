@@ -8,7 +8,7 @@ export const App: React.FC = () => {
   /**
    * 初期化
    */
-  useEffect(() => {
+  const init = useCallback(() => {
     const canvas = canvasRef.current!;
     canvas.width = 800;
     canvas.height = 400;
@@ -19,6 +19,7 @@ export const App: React.FC = () => {
 
     contextRef.current = ctx;
   }, []);
+  useEffect(init, [init]);
 
   /**
    * 描画開始
@@ -82,6 +83,23 @@ export const App: React.FC = () => {
   }, []);
 
   /**
+   * 全消し
+   */
+  const handleClear = useCallback(init, [init]);
+
+  /**
+   * ダウンロード
+   */
+  const handleDownload = useCallback(() => {
+    const canvas = canvasRef.current!;
+
+    const link = document.createElement("a");
+    link.href = canvas.toDataURL("image/png");
+    link.download = "image.png";
+    link.click();
+  }, []);
+
+  /**
    * イベント登録
    */
   useEffect(() => {
@@ -106,29 +124,6 @@ export const App: React.FC = () => {
       canvas.removeEventListener("touchend", handleEnd);
     };
   }, [handleStart, handleMove, handleEnd]);
-
-  /**
-   * 全消し
-   */
-  const handleClear = useCallback(() => {
-    const canvas = canvasRef.current!;
-    const ctx = contextRef.current!;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "lightgray";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }, []);
-
-  /**
-   * ダウンロード
-   */
-  const handleDownload = useCallback(() => {
-    const canvas = canvasRef.current!;
-    const link = document.createElement("a");
-    link.href = canvas.toDataURL("image/png");
-    link.download = "image.png";
-    link.click();
-  }, []);
 
   return (
     <>
