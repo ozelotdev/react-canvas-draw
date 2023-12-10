@@ -1,14 +1,29 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from "react";
 
 export const App: React.FC = () => {
+  const drawCanvasRef = React.useRef<{ clear: () => void; download: () => void } | null>(null);
+
+  const handleClear = useCallback(() => {
+    drawCanvasRef.current?.clear();
+  }, []);
+
+  const handleDownload = useCallback(() => {
+    drawCanvasRef.current?.download();
+  }, []);
+
   return (
     <>
-      <DrawCanvas />
+      <h1>react-canvas-draw</h1>
+      <div>
+        <DrawCanvas ref={drawCanvasRef} />
+      </div>
+      <button onClick={handleClear}>Clear</button>
+      <button onClick={handleDownload}>Download</button>
     </>
   );
 };
 
-const DrawCanvas: React.FC = () => {
+const DrawCanvas = forwardRef((_, ref) => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const contextRef = React.useRef<CanvasRenderingContext2D | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -133,14 +148,12 @@ const DrawCanvas: React.FC = () => {
     };
   }, [handleStart, handleMove, handleEnd]);
 
+  useImperativeHandle(ref, () => ({
+    clear: handleClear,
+    download: handleDownload,
+  }));
+
   return (
-    <>
-      <h1>react-canvas-draw</h1>
-      <div>
-        <canvas ref={canvasRef} id="canvas" width="800" height="600"></canvas>
-      </div>
-      <button onClick={handleClear}>Clear</button>
-      <button onClick={handleDownload}>Download</button>
-    </>
+    <canvas ref={canvasRef} id="canvas" width="800" height="600"></canvas>
   );
-};
+});
