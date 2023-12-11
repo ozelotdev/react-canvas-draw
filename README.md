@@ -18,6 +18,7 @@ Prepare the following environment.
 Execute the following command.
 
 ```bash
+pnpm install --frozen-lockfile
 pnpm run dev
 ```
 
@@ -32,6 +33,7 @@ Open this repository and execute "Dev Containers: Reopen in Container" from the 
 Execute the following command.
 
 ```bash
+pnpm install --frozen-lockfile
 pnpm run dev
 ```
 
