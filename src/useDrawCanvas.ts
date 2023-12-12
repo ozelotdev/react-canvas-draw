@@ -11,8 +11,16 @@ export const useDrawCanvas = (props: {
    * 初期化
    */
   const init = useCallback(() => {
-    const canvas = props.canvasRef.current!;
-    const ctx = canvas.getContext("2d")!;
+    const canvas = props.canvasRef.current;
+    if (!canvas) {
+      throw new Error('canvas is undefined');
+    }
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      throw new Error('context is undefined');
+    }
+
     ctx.fillStyle = "lightgray";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -26,7 +34,10 @@ export const useDrawCanvas = (props: {
   const handleStart = useCallback((e: MouseEvent | TouchEvent) => {
     e.preventDefault();
 
-    const ctx = contextRef.current!;
+    const ctx = contextRef.current;
+    if (!ctx) {
+      throw new Error('context is undefined');
+    }
 
     ctx.beginPath();
     positionRef.current = null;
@@ -44,8 +55,16 @@ export const useDrawCanvas = (props: {
         return;
       }
 
-      const canvas = props.canvasRef.current!;
-      const ctx = contextRef.current!;
+      const canvas = props.canvasRef.current;
+      if (!canvas) {
+        throw new Error('canvas is undefined');
+      }
+  
+      const ctx = contextRef.current;
+      if (!ctx) {
+        throw new Error('context is undefined');
+      }
+  
       ctx.lineCap = "round";
       ctx.lineWidth = 3;
       ctx.strokeStyle = "black";
@@ -85,7 +104,10 @@ export const useDrawCanvas = (props: {
   const handleEnd = useCallback((e: MouseEvent | TouchEvent) => {
     e.preventDefault();
 
-    const ctx = contextRef.current!;
+    const ctx = contextRef.current;
+    if (!ctx) {
+      throw new Error('context is undefined');
+    }
 
     ctx.closePath();
     positionRef.current = null;
@@ -103,7 +125,10 @@ export const useDrawCanvas = (props: {
    * ダウンロード
    */
   const handleDownload = useCallback(() => {
-    const canvas = props.canvasRef.current!;
+    const canvas = props.canvasRef.current;
+    if (!canvas) {
+      throw new Error('canvas is undefined');
+    }
 
     const link = document.createElement("a");
     link.href = canvas.toDataURL("image/jpeg");
@@ -115,7 +140,10 @@ export const useDrawCanvas = (props: {
    * イベント登録
    */
   useEffect(() => {
-    const canvas = props.canvasRef.current!;
+    const canvas = props.canvasRef.current;
+    if (!canvas) {
+      throw new Error('canvas is undefined');
+    }
 
     // for PC
     canvas.addEventListener("mousedown", handleStart);
