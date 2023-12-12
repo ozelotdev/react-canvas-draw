@@ -146,14 +146,14 @@ export const useDrawCanvas = (props: {
     }
 
     // for PC
-    canvas.addEventListener("mousedown", handleStart);
-    canvas.addEventListener("mousemove", handleMove);
-    canvas.addEventListener("mouseup", handleEnd);
+    canvas.addEventListener("mousedown", handleStart, { passive: false });
+    canvas.addEventListener("mousemove", handleMove, { passive: false });
+    canvas.addEventListener("mouseup", handleEnd, { passive: false });
 
     // for Smartphone
-    canvas.addEventListener("touchstart", handleStart);
-    canvas.addEventListener("touchmove", handleMove);
-    canvas.addEventListener("touchend", handleEnd);
+    canvas.addEventListener("touchstart", handleStart, { passive: false });
+    canvas.addEventListener("touchmove", handleMove, { passive: false });
+    canvas.addEventListener("touchend", handleEnd, { passive: false });
 
     return () => {
       canvas.removeEventListener("mousedown", handleStart);
