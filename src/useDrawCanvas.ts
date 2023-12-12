@@ -13,12 +13,12 @@ export const useDrawCanvas = (props: {
   const init = useCallback(() => {
     const canvas = props.canvasRef.current;
     if (!canvas) {
-      throw new Error('canvas is undefined');
+      return;
     }
 
     const ctx = canvas.getContext("2d");
     if (!ctx) {
-      throw new Error('context is undefined');
+      return;
     }
 
     ctx.fillStyle = "lightgray";
@@ -36,7 +36,7 @@ export const useDrawCanvas = (props: {
 
     const ctx = contextRef.current;
     if (!ctx) {
-      throw new Error('context is undefined');
+      return;
     }
 
     ctx.beginPath();
@@ -57,12 +57,12 @@ export const useDrawCanvas = (props: {
 
       const canvas = props.canvasRef.current;
       if (!canvas) {
-        throw new Error('canvas is undefined');
+        return;
       }
   
       const ctx = contextRef.current;
       if (!ctx) {
-        throw new Error('context is undefined');
+        return;
       }
   
       ctx.lineCap = "round";
@@ -106,7 +106,7 @@ export const useDrawCanvas = (props: {
 
     const ctx = contextRef.current;
     if (!ctx) {
-      throw new Error('context is undefined');
+      return;
     }
 
     ctx.closePath();
@@ -127,7 +127,7 @@ export const useDrawCanvas = (props: {
   const handleDownload = useCallback(() => {
     const canvas = props.canvasRef.current;
     if (!canvas) {
-      throw new Error('canvas is undefined');
+      return;
     }
 
     const link = document.createElement("a");
@@ -142,7 +142,7 @@ export const useDrawCanvas = (props: {
   useEffect(() => {
     const canvas = props.canvasRef.current;
     if (!canvas) {
-      throw new Error('canvas is undefined');
+      return;
     }
 
     // for PC
