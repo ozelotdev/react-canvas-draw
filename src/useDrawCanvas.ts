@@ -1,7 +1,8 @@
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useRef, useState, useCallback, useEffect, RefObject } from "react";
 
-export const useDrawCanvas = (props: { width: number; height: number }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+export const useDrawCanvas = (props: {
+  canvasRef: RefObject<HTMLCanvasElement>;
+}) => {
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
   const positionRef = useRef<{ x: number; y: number } | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -10,16 +11,13 @@ export const useDrawCanvas = (props: { width: number; height: number }) => {
    * 初期化
    */
   const init = useCallback(() => {
-    const canvas = canvasRef.current!;
-    canvas.width = props.width;
-    canvas.height = props.height;
-
+    const canvas = props.canvasRef.current!;
     const ctx = canvas.getContext("2d")!;
     ctx.fillStyle = "lightgray";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     contextRef.current = ctx;
-  }, [props.width, props.height]);
+  }, [props.canvasRef]);
   useEffect(init, [init]);
 
   /**
@@ -46,7 +44,7 @@ export const useDrawCanvas = (props: { width: number; height: number }) => {
         return;
       }
 
-      const canvas = canvasRef.current!;
+      const canvas = props.canvasRef.current!;
       const ctx = contextRef.current!;
       ctx.lineCap = "round";
       ctx.lineWidth = 3;
@@ -78,7 +76,7 @@ export const useDrawCanvas = (props: { width: number; height: number }) => {
 
       positionRef.current = { x, y };
     },
-    [isDrawing],
+    [props.canvasRef, isDrawing],
   );
 
   /**
@@ -105,19 +103,19 @@ export const useDrawCanvas = (props: { width: number; height: number }) => {
    * ダウンロード
    */
   const handleDownload = useCallback(() => {
-    const canvas = canvasRef.current!;
+    const canvas = props.canvasRef.current!;
 
     const link = document.createElement("a");
     link.href = canvas.toDataURL("image/jpeg");
     link.download = "image.jpeg";
     link.click();
-  }, []);
+  }, [props.canvasRef]);
 
   /**
    * イベント登録
    */
   useEffect(() => {
-    const canvas = canvasRef.current!;
+    const canvas = props.canvasRef.current!;
 
     // for PC
     canvas.addEventListener("mousedown", handleStart);
@@ -137,19 +135,9 @@ export const useDrawCanvas = (props: { width: number; height: number }) => {
       canvas.removeEventListener("touchmove", handleMove);
       canvas.removeEventListener("touchend", handleEnd);
     };
-  }, [handleStart, handleMove, handleEnd]);
-
-  const canvas = (
-    <canvas
-      ref={canvasRef}
-      id="canvas"
-      width={props.width}
-      height={props.height}
-    />
-  );
+  }, [props.canvasRef, handleStart, handleMove, handleEnd]);
 
   return {
-    canvas,
     clear: handleClear,
     download: handleDownload,
   };
